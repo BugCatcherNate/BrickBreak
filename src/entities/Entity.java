@@ -11,6 +11,7 @@ import static java.lang.Math.floor;
 public class Entity {
 
 	private RawModel model;
+	private TexturedModel texturemodel;
 	private Vector3f position;
 	private float rotX, rotY, rotZ;
 	private float scale;
@@ -26,8 +27,9 @@ public class Entity {
 			this.y = y;
 		}
 	}
-	public Entity(RawModel model, Vector3f position, float rotX, float rotY, float rotZ,
+	public Entity(RawModel model, TexturedModel textmodel, Vector3f position, float rotX, float rotY, float rotZ,
 			float scale) {
+		this.texturemodel = textmodel;
 		this.model = model;
 		this.position = position;
 		this.velocity = new Vector3f(0,0,0);
@@ -38,22 +40,14 @@ public class Entity {
 		this.scale = scale;
 	}
 
-	public void increasePosition() {
-		this.position.x += velocity.x;
-		this.position.y += velocity.y;
-		this.position.z += velocity.z;
+	public void increasePosition(float x, float y, float z) {
+		this.position.x += x;
+		this.position.y += y;
+		this.position.z += z;
 
 	}
 
-	public void normalizeAcceleration(float drag){
 
-		this.velocity.x = Maths.lerp(this.velocity.x, 0, drag);
-		this.velocity.y = Maths.lerp(this.velocity.y, 0, drag);
-		this.velocity.z = Maths.lerp(this.velocity.z, 0, drag);
-
-
-		increasePosition();
-	}
 
 	public float[] getMax(float width, float height){
 
@@ -90,6 +84,8 @@ public class Entity {
 	public RawModel getModel() {
 		return model;
 	}
+
+	public TexturedModel getTexturedModel(){return texturemodel;}
 
 	public void setModel(RawModel model) {
 		this.model = model;

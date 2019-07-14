@@ -2,6 +2,8 @@ package engineTester;
 
 import models.RawModel;
 import java.lang.Math.*;
+
+import models.TexturedModel;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import renderEngine.Loader;
@@ -10,6 +12,7 @@ import shaders.StaticShader;
 import physics.utilities;
 
 import entities.Entity;
+import textures.ModelTexture;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.floor;
@@ -30,94 +33,104 @@ public class MainGameLoop {
 		Renderer renderer = new Renderer(shader);
 
 		float[] vertices = {
-				-0.10f, 0.4f, 0f,
-				-0.10f,-0.4f, 0f,
-				0.10f,-0.4f, 0f,
-				0.10f, 0.4f, 0f
+				//-0.5f, 0.5f, 0f,
+				//-0.5f,-0.5f, 0f,
+				//0.5f,-0.5f, 0f,
+				//0.5f, 0.5f, 0f
+				0.5f,0.5f,-0.5f,
+				-0.5f,0.5f,-0.5f,
+				-0.5f,0.5f,0.5f,
+				0.5f,0.5f,0.5f,
+				0.5f,-0.5f,0.5f,
+				-0.5f,-0.5f,0.5f,
+				-0.5f,-0.5f,-0.5f,
+				0.5f,-0.5f,-0.5f,
+				0.5f,0.5f,0.5f,
+				-0.5f,0.5f,0.5f,
+				-0.5f,-0.5f,0.5f,
+				0.5f,-0.5f,0.5f,
+				0.5f,-0.5f,-0.5f,
+				-0.5f,-0.5f,-0.5f,
+				-0.5f,0.5f,-0.5f,
+				0.5f,0.5f,-0.5f,
+				-0.5f,0.5f,0.5f,
+				-0.5f,0.5f,-0.5f,
+				-0.5f,-0.5f,-0.5f,
+				-0.5f,-0.5f,0.5f,
+				0.5f,0.5f,-0.5f,
+				0.5f,0.5f,0.5f,
+				0.5f,-0.5f,0.5f,
+				0.5f,-0.5f,-0.5f
 
 		};
 
 
 
 		int[] indices = {
-				0,1,3,
-				3,1,2,
+				//0,1,3,
+				//3,1,2
+				0,  1,  2,  0,  2,  3,   //front
+				4,  5,  6,  4,  6,  7,   //right
+				8,  9,  10, 8,  10, 11,  //back
+				12, 13, 14, 12, 14, 15,  //left
+				16, 17, 18, 16, 18, 19,  //upper
+				20, 21, 22, 20, 22, 23
 
 
 		};
 
+		float[] textureCoords = {
 
-		float[] pongVertices  = {
-				-0.05f, 0.05f, 0f,
-				-0.05f,-0.05f, 0f,
-				0.05f,-0.05f, 0f,
-				0.05f, 0.05f, 0f
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0,
+				0,0,
+				0,1,
+				1,1,
+				1,0
 
 		};
 
 
 
-		int[] pongIndices = {
-				0,1,3,
-				3,1,2,
+		RawModel model = loader.loadToVAO(vertices, textureCoords, indices);
+
+		ModelTexture texture = new ModelTexture(loader.loadTexture("crate"));
+		TexturedModel texturedModel = new TexturedModel(model,texture);
+
+		Entity entity = new Entity(model, texturedModel, new Vector3f(0f,0,-5),0,0,0,1);
 
 
-		};
-
-		RawModel pongModel = loader.loadToVAO(pongVertices,pongIndices);
-		RawModel model = loader.loadToVAO(vertices ,indices);
-
-
-
-		Entity entity = new Entity(model, new Vector3f(-1f,0,0),0,0,0,1);
-		Entity pong = new Entity(pongModel, new Vector3f(0,0,0),0,0,0,1);
-
-
-		float ballDirectionx = -.01f;
-		float ballDirectiony = 0f;
-
-		System.out.println(entity.getPosition().toString());
-		pong.accelerate(-.04f,0,0);
-
-
+		float zoom = 0.0002f;
 		while(!glfwWindowShouldClose(window)){
 			glfwPollEvents();
 
 
-			if(pong.getPosition().x > 1){
-			pong.accelerate(-.04f, pong.getVelocity().y, 0);
-							}
-			else if(pong.getPosition().x < -1){
-				pong.accelerate(.04f, pong.getVelocity().y, 0);
+			entity.increaseRotation(0.0002f, 0.0002f,0);
+			if(entity.getPosition().z < -15 | entity.getPosition().z > -1 ) {
+				zoom *= -1;
 			}
-			if(pong.getPosition().y > 1){
-				pong.accelerate(pong.getVelocity().x, -.05f, 0);
-
-			}else if(pong.getPosition().y < -1){
-				pong.accelerate(pong.getVelocity().x, .05f,0);
-			}
-			entity.normalizeAcceleration(.2f);
-			pong.normalizeAcceleration(0);
-			int upstate = glfwGetKey(window, GLFW_KEY_A);
-			if (upstate == GLFW_PRESS) {
-				entity.accelerate(0,0.05f,0);
-			}
-			int downstate = glfwGetKey(window, GLFW_KEY_D);
-			if (downstate == GLFW_PRESS) {
-				entity.accelerate(0, -0.05f, 0);
-			}
-
-			if(utilities.collisionDetection(entity,pong)){
-				System.out.println("Collided");
-				pong.accelerate(0.05f, entity.getVelocity().y, 0);
-
-
-			}
-
+			entity.increasePosition(0,0,zoom);
 			renderer.prepare();
 			shader.start();
 			renderer.render(entity,shader);
-			renderer.render(pong, shader);
 			shader.stop();
 			glfwSwapBuffers(window);
 		}
@@ -131,7 +144,7 @@ public class MainGameLoop {
 
 	private static long createWindow() {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-		long window = glfwCreateWindow(800, 600, "Pong", NULL, NULL);
+		long window = glfwCreateWindow(800, 600, "EngineN", NULL, NULL);
 		glfwMakeContextCurrent(window);
 		createCapabilities();
 		return window;

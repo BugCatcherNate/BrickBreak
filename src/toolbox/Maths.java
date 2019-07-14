@@ -10,6 +10,10 @@ public class Maths {
 		Matrix4f matrix = new Matrix4f();
 		matrix.identity();
 		matrix.translate(translation);
+		matrix.rotateY(ry);
+		matrix.rotateX(rx);
+		matrix.rotateZ(rz);
+
 		return matrix;
 	}
 
