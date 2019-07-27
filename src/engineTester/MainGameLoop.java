@@ -35,24 +35,21 @@ public class MainGameLoop {
 
 
 
-		RawModel model = OBJLoader.loadObjModel("stall", loader);
+		RawModel model = OBJLoader.loadObjModel("crate", loader);
 
-		ModelTexture texture = new ModelTexture(loader.loadTexture("stallTexture"));
+		ModelTexture texture = new ModelTexture(loader.loadTexture("brown"));
 		TexturedModel texturedModel = new TexturedModel(model,texture);
 
 		Entity entity = new Entity(model, texturedModel, new Vector3f(0f,0,-5),0,0,0,1);
 
 
-		float zoom = 0.001f;
+		float zoom = 0.1f;
 		while(!glfwWindowShouldClose(window)){
 			glfwPollEvents();
 
 
-			entity.increaseRotation(0f, 0.0005f,0);
-			if(entity.getPosition().z < -150 | entity.getPosition().z > -1 ) {
-				zoom *= -1;
-			}
-			entity.increasePosition(0,0,zoom);
+			entity.increaseRotation(0f, 0.005f,0);
+
 			renderer.prepare();
 			shader.start();
 			renderer.render(entity,shader);
