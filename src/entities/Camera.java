@@ -15,6 +15,17 @@ public class Camera {
 
 
     public Camera () {};
+    public void moveHoriz(float amount) {
+
+    position.x += amount;
+
+    };
+
+    public void moveForward(float amount) {
+
+    position.z += amount;
+
+    };
 
     public Vector3f getPosition() {
         return position;
@@ -22,6 +33,11 @@ public class Camera {
 
     public float getYaw() {
         return yaw;
+    }
+
+    public float getPitch(){
+
+        return pitch;
     }
 
     public float getRoll() {

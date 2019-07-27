@@ -1,5 +1,7 @@
 package engineTester;
 
+import entities.Camera;
+import entities.Light;
 import models.RawModel;
 import java.lang.Math.*;
 
@@ -40,18 +42,40 @@ public class MainGameLoop {
 		ModelTexture texture = new ModelTexture(loader.loadTexture("brown"));
 		TexturedModel texturedModel = new TexturedModel(model,texture);
 
-		Entity entity = new Entity(model, texturedModel, new Vector3f(0f,0,-5),0,0,0,1);
+		Entity entity = new Entity(model, texturedModel, new Vector3f(0f,0,-15),0,0,0,1);
+		Light light = new Light(new Vector3f(10,0,-10), new Vector3f(1,1,1));
 
+		Camera camera = new Camera();
+		float movespeed = 0.1f;
+
+		int wstate, astate, dstate, sstate;
 
 		float zoom = 0.1f;
 		while(!glfwWindowShouldClose(window)){
 			glfwPollEvents();
-
+			wstate = glfwGetKey(window, GLFW_KEY_W);
+			if (wstate == GLFW_PRESS){
+				camera.moveForward(movespeed);
+			}
+			astate = glfwGetKey(window, GLFW_KEY_A);
+			if (astate == GLFW_PRESS){
+				camera.moveHoriz(movespeed);
+			}
+			dstate = glfwGetKey(window, GLFW_KEY_D);
+			if (dstate == GLFW_PRESS){
+				camera.moveHoriz(-movespeed);
+			}
+			sstate = glfwGetKey(window, GLFW_KEY_S);
+					if (sstate == GLFW_PRESS){
+				camera.moveForward(-movespeed);
+			}
 
 			entity.increaseRotation(0f, 0.005f,0);
 
 			renderer.prepare();
 			shader.start();
+			shader.loadViewMatrix(camera);
+			shader.loadLight(light);
 			renderer.render(entity,shader);
 			shader.stop();
 			glfwSwapBuffers(window);

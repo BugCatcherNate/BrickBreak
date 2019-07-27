@@ -1,5 +1,6 @@
 package toolbox;
 
+import entities.Camera;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -22,5 +23,16 @@ public class Maths {
 		return a + f * (b - a);
 	}
 
+	public static Matrix4f createViewMatrix(Camera camera){
+
+		Matrix4f viewMatrix = new Matrix4f();
+		viewMatrix.identity();
+		viewMatrix.rotateX(camera.getPitch());
+		viewMatrix.rotateY(camera.getYaw());
+		Vector3f cameraPos = camera.getPosition();
+		Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+		viewMatrix.translate(negativeCameraPos);
+		return viewMatrix;
+	}
 
 }
