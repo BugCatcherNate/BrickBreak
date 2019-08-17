@@ -41,8 +41,10 @@ public class MainGameLoop {
 		ModelTexture texture = new ModelTexture(loader.loadTexture("brown"));
 		TexturedModel texturedModel = new TexturedModel(model,texture);
 
+		texture.setShineDamper(10);
+		texture.setReflectivity(1);
 		//Entity entity = new Entity(model, texturedModel, new Vector3f(0f,0,-15),0,0,0,1);
-		Light light = new Light(new Vector3f(10,0,-10), new Vector3f(1,1,1));
+		Light light = new Light(new Vector3f(200,200,100), new Vector3f(1,1,1));
 
 		Camera camera = new Camera();
 		List<Entity> allCubes = new ArrayList<Entity>();
