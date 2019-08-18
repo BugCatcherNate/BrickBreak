@@ -7,7 +7,7 @@ import java.security.Key;
 
 public class Camera {
 
-    private Vector3f position = new Vector3f(0,0,0);
+    private Vector3f position = new Vector3f(0,1,0);
 
     private float pitch;
     private float yaw;

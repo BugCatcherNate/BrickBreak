@@ -3,26 +3,22 @@ package engineTester;
 import entities.Camera;
 import entities.Light;
 import models.RawModel;
-import java.lang.Math.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import models.TexturedModel;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFWKeyCallback;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
-import renderEngine.Renderer;
-import shaders.StaticShader;
-import physics.utilities;
 
 import entities.Entity;
+import terrain.Terrain;
 import textures.ModelTexture;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.floor;
 import static org.lwjgl.opengl.GL.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -44,7 +40,10 @@ public class MainGameLoop {
 		texture.setShineDamper(10);
 		texture.setReflectivity(1);
 		//Entity entity = new Entity(model, texturedModel, new Vector3f(0f,0,-15),0,0,0,1);
-		Light light = new Light(new Vector3f(200,200,100), new Vector3f(1,1,1));
+		Light light = new Light(new Vector3f(2000,2000,2000), new Vector3f(1,1,1));
+
+		Terrain terrain = new Terrain(0,-1,loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain2 = new Terrain(1,-1,loader, new ModelTexture(loader.loadTexture("grass")));
 
 		Camera camera = new Camera();
 		List<Entity> allCubes = new ArrayList<Entity>();
@@ -86,11 +85,16 @@ public class MainGameLoop {
 				camera.moveForward(movespeed);
 			}
 
+
 			//entity.increaseRotation(0f, 0.005f,0);
-			for (Entity cube: allCubes){
+			/*for (Entity cube: allCubes){
 
 				renderer.processEntity(cube);
 			}
+
+			 */
+			renderer.processTerrain(terrain);
+			renderer.processTerrain(terrain2);
 			renderer.render(light,camera);
 			glfwSwapBuffers(window);
 		}
