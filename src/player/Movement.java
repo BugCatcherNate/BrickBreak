@@ -19,13 +19,16 @@ public class Movement {
     private int dstate;
     private int sstate;
     private int space;
-	private int capsl;
+	private int shift;
 
-	private float oldx;
-	private float oldy;
+	private double oldx;
+	private double oldy;
 
-	private float deltax;
-	private float deltay;
+	private double deltax;
+	private double deltay;
+
+	DoubleBuffer b1 = BufferUtils.createDoubleBuffer(1);
+	DoubleBuffer b2 = BufferUtils.createDoubleBuffer(1);
 
     public Movement(float speed, Camera camera, long window){
     	this.speed = speed;
@@ -55,16 +58,22 @@ public class Movement {
 		if (space == GLFW_PRESS) {
 			camera.moveUp(speed);
 		}
-		capsl = glfwGetKey(window, GLFW_KEY_CAPS_LOCK);
-		if (capsl == GLFW_PRESS) {
+		shift = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT);
+		if (shift == GLFW_PRESS) {
 			camera.moveUp(-speed);
 		}
 
-		DoubleBuffer b1 = BufferUtils.createDoubleBuffer(1);
-		DoubleBuffer b2 = BufferUtils.createDoubleBuffer(1);
-		glfwGetCursorPos(window, b1, b2);
-		System.out.println("x : " + b1.get(0) + ", y = " + b2.get(0));
 
+		glfwGetCursorPos(window, b1, b2);
+
+		deltax = oldx - b1.get(0);
+		deltay = oldy - b2.get(0);
+
+		oldx = b1.get(0);
+		oldy = b2.get(0);
+
+		camera.rotateY(-.1*  deltay);
+		camera.rotateX(-.1* deltax);
 
 	}
 

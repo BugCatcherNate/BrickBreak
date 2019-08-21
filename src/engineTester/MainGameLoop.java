@@ -33,9 +33,9 @@ public class MainGameLoop {
 
 		Loader loader = new Loader();
 
-		RawModel model = OBJLoader.loadObjModel("fern", loader);
+		RawModel model = OBJLoader.loadObjModel("crate", loader);
 
-		ModelTexture texture = new ModelTexture(loader.loadTexture("fern"));
+		ModelTexture texture = new ModelTexture(loader.loadTexture("crate"));
 		TexturedModel texturedModel = new TexturedModel(model,texture);
 
 		texture.setShineDamper(10);
@@ -59,7 +59,7 @@ public class MainGameLoop {
 			allCubes.add(new Entity(model, texturedModel, new Vector3f(x, y, z), 0f, 0f, 0f, 1f));
 		}
 
-		Movement controller = new Movement(0.1f, camera, window);
+		Movement controller = new Movement(0.01f, camera, window);
 
 		float zoom = 0.1f;
 		MasterRenderer renderer = new MasterRenderer();
@@ -73,8 +73,6 @@ public class MainGameLoop {
 
 				renderer.processEntity(cube);
 			}
-
-
 
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);

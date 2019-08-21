@@ -32,6 +32,17 @@ public class Camera {
 
     };
 
+    public void rotateY(double amount){
+
+        pitch += amount;
+    }
+
+
+    public void rotateX(double amount){
+
+        yaw += amount;
+    }
+
     public Vector3f getPosition() {
         return position;
     }
