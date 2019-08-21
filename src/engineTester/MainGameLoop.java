@@ -10,6 +10,7 @@ import java.util.Random;
 
 import models.TexturedModel;
 import org.joml.Vector3f;
+import player.Movement;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
@@ -32,9 +33,9 @@ public class MainGameLoop {
 
 		Loader loader = new Loader();
 
-		RawModel model = OBJLoader.loadObjModel("crate", loader);
+		RawModel model = OBJLoader.loadObjModel("fern", loader);
 
-		ModelTexture texture = new ModelTexture(loader.loadTexture("brown"));
+		ModelTexture texture = new ModelTexture(loader.loadTexture("fern"));
 		TexturedModel texturedModel = new TexturedModel(model,texture);
 
 		texture.setShineDamper(10);
@@ -52,15 +53,13 @@ public class MainGameLoop {
 
 		for(int i=0; i < 200; i++){
 			float x = random.nextFloat() * 100 - 50;
-			float y = random.nextFloat() * 100 - 50;
-			float z = random.nextFloat() * -300;
+			float y = -0.1f;
+			float z = random.nextFloat() * 100 - 50;
 
-			allCubes.add(new Entity(model, texturedModel, new Vector3f(x, y, z), random.nextFloat() * 180f, random.nextFloat()* 180f, 0f, 1f));
+			allCubes.add(new Entity(model, texturedModel, new Vector3f(x, y, z), 0f, 0f, 0f, 1f));
 		}
 
-		float movespeed = 0.1f;
-
-		int wstate, astate, dstate, sstate;
+		Movement controller = new Movement(0.1f, camera, window);
 
 		float zoom = 0.1f;
 		MasterRenderer renderer = new MasterRenderer();
@@ -68,31 +67,15 @@ public class MainGameLoop {
 
 		while(!glfwWindowShouldClose(window)){
 			glfwPollEvents();
-			wstate = glfwGetKey(window, GLFW_KEY_W);
-			if (wstate == GLFW_PRESS){
-				camera.moveForward(-movespeed);
-			}
-			astate = glfwGetKey(window, GLFW_KEY_A);
-			if (astate == GLFW_PRESS){
-				camera.moveHoriz(-movespeed);
-			}
-			dstate = glfwGetKey(window, GLFW_KEY_D);
-			if (dstate == GLFW_PRESS){
-				camera.moveHoriz(movespeed);
-			}
-			sstate = glfwGetKey(window, GLFW_KEY_S);
-					if (sstate == GLFW_PRESS){
-				camera.moveForward(movespeed);
-			}
-
-
+			controller.movement();
 			//entity.increaseRotation(0f, 0.005f,0);
-			/*for (Entity cube: allCubes){
+			for (Entity cube: allCubes){
 
 				renderer.processEntity(cube);
 			}
 
-			 */
+
+
 			renderer.processTerrain(terrain);
 			renderer.processTerrain(terrain2);
 			renderer.render(light,camera);

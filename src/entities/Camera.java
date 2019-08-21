@@ -26,6 +26,11 @@ public class Camera {
     position.z += amount;
 
     };
+    public void moveUp(float amount) {
+
+        position.y += amount;
+
+    };
 
     public Vector3f getPosition() {
         return position;
